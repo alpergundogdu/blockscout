@@ -45,7 +45,11 @@ config :block_scout_web, :recaptcha,
   is_disabled: ConfigHelper.parse_bool_env_var("RE_CAPTCHA_DISABLED"),
   check_hostname?: ConfigHelper.parse_bool_env_var("RE_CAPTCHA_CHECK_HOSTNAME", "true"),
   score_threshold: ConfigHelper.parse_float_env_var("RE_CAPTCHA_SCORE_THRESHOLD", "0.5"),
-  bypass_token: ConfigHelper.safe_get_env("RE_CAPTCHA_BYPASS_TOKEN", nil)
+  bypass_token: ConfigHelper.safe_get_env("RE_CAPTCHA_BYPASS_TOKEN", nil),
+  scoped_bypass_tokens: [
+    token_instance_refetch_metadata:
+      ConfigHelper.safe_get_env("RE_CAPTCHA_TOKEN_INSTANCE_REFETCH_METADATA_SCOPED_BYPASS_TOKEN", nil)
+  ]
 
 network_path =
   "NETWORK_PATH"
@@ -704,6 +708,11 @@ config :explorer, Explorer.Migrator.SmartContractLanguage,
   batch_size: ConfigHelper.parse_integer_env_var("MIGRATION_SMART_CONTRACT_LANGUAGE_BATCH_SIZE", 100),
   concurrency: ConfigHelper.parse_integer_env_var("MIGRATION_SMART_CONTRACT_LANGUAGE_CONCURRENCY", 1)
 
+config :explorer, Explorer.Migrator.BackfillMetadataURL,
+  enabled: !ConfigHelper.parse_bool_env_var("MIGRATION_BACKFILL_METADATA_URL_DISABLED"),
+  batch_size: ConfigHelper.parse_integer_env_var("MIGRATION_BACKFILL_METADATA_URL_BATCH_SIZE", 100),
+  concurrency: ConfigHelper.parse_integer_env_var("MIGRATION_BACKFILL_METADATA_URL_CONCURRENCY", 5)
+
 config :explorer, Explorer.Chain.BridgedToken,
   eth_omni_bridge_mediator: System.get_env("BRIDGED_TOKENS_ETH_OMNI_BRIDGE_MEDIATOR"),
   bsc_omni_bridge_mediator: System.get_env("BRIDGED_TOKENS_BSC_OMNI_BRIDGE_MEDIATOR"),
@@ -899,7 +908,10 @@ config :indexer, Indexer.Fetcher.BlockReward,
   concurrency: ConfigHelper.parse_integer_env_var("INDEXER_BLOCK_REWARD_CONCURRENCY", 4)
 
 config :indexer, Indexer.Fetcher.TokenInstance.Helper,
-  base_uri_retry?: ConfigHelper.parse_bool_env_var("INDEXER_TOKEN_INSTANCE_USE_BASE_URI_RETRY")
+  base_uri_retry?: ConfigHelper.parse_bool_env_var("INDEXER_TOKEN_INSTANCE_USE_BASE_URI_RETRY"),
+  cidr_blacklist: ConfigHelper.parse_list_env_var("INDEXER_TOKEN_INSTANCE_CIDR_BLACKLIST", ""),
+  host_filtering_enabled?: ConfigHelper.parse_bool_env_var("INDEXER_TOKEN_INSTANCE_HOST_FILTERING_ENABLED", "true"),
+  allowed_uri_protocols: ConfigHelper.parse_list_env_var("INDEXER_TOKEN_INSTANCE_ALLOWED_URI_PROTOCOLS", "http,https")
 
 config :indexer, Indexer.Fetcher.TokenInstance.Retry,
   concurrency: ConfigHelper.parse_integer_env_var("INDEXER_TOKEN_INSTANCE_RETRY_CONCURRENCY", 10),
