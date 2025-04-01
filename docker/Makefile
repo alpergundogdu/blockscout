@@ -15,6 +15,10 @@ TAG := $(RELEASE_VERSION)-commit-$(shell git log -1 --pretty=format:"%h")
 STABLE_TAG := $(RELEASE_VERSION)
 
 start:
+	@echo "==> Removing blockscout db data (For testing purposes, remove this line in prod)"
+	rm -rf "../docker-compose/services/blockscout-db-data"
+	@echo "==> Removing stats db data (For testing purposes, remove this line in prod)"
+	rm -rf "../docker-compose/services/stats-db-data"
 	@echo "==> Starting blockscout db"
 	@docker-compose -f ../docker-compose/services/db.yml up -d
 	@echo "==> Starting blockscout backend"

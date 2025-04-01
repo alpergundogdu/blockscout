@@ -15,3 +15,13 @@ services:
     volumes:
       - ./logs/:/app/logs/
       - ./dets/:/app/dets/
+    environment:
+      ETHEREUM_JSONRPC_HTTP_URL: 'http://host.docker.internal:18545'
+      ETHEREUM_JSONRPC_WS_URL: 'ws://host.docker.internal:18545'
+      INDEXER_DISABLE_PENDING_TRANSACTIONS_FETCHER: 'true'
+      INDEXER_DISABLE_INTERNAL_TRANSACTIONS_FETCHER: 'true'
+      INDEXER_DISABLE_EMPTY_BLOCKS_SANITIZER: 'true'
+      ETHEREUM_JSONRPC_DISABLE_ARCHIVE_BALANCES: 'true'
+      INDEXER_DISABLE_WITHDRAWALS_FETCHER: 'true'
+      ETHEREUM_JSONRPC_CASE: EthereumJSONRPC.Case.Geth.HTTPWebSocket
+      ETHEREUM_JSONRPC_WEB_SOCKET_CASE: EthereumJSONRPC.WebSocket.Case.Geth
